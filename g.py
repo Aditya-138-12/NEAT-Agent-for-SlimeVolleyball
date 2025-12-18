@@ -18,20 +18,29 @@ def my_policy(obs, net):
 
 
 def eval_genome(genome, config):
-  env = gym.make("SlimeVolley-v0")
+
+  N_EPISODES = 5
   net = neat.nn.FeedForwardNetwork.create(genome, config)
-  obs = env.reset()
-  done = False
-  fitness = 0
+  total_fitness = 0
 
-  while not done:
-    #env.render()
-    action = my_policy(obs, net)
-    obs, reward, done, info = env.step(action)
-    fitness += reward
+  for ep in range(N_EPISODES):
 
+
+    env = gym.make("SlimeVolley-v0")
+    obs = env.reset()
+    done = False
+    fitness = 0
+
+    while not done:
+      #env.render()
+      action = my_policy(obs, net)
+      obs, reward, done, info = env.step(action)
+      fitness += reward
+    
+    total_fitness += fitness
+  
   env.close()
-  return fitness
+  return total_fitness / N_EPISODES
 
 def eval_genomes(genomes, config):
   for genome_id, genome in genomes:
